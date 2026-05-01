@@ -1,13 +1,18 @@
-import type { ReactNode } from 'react';
+import { Outlet } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-interface RootLayoutProps {
-  children: ReactNode;
-}
-
-export function RootLayout({ children }: RootLayoutProps) {
+export function RootLayout() {
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary antialiased">
-      {children}
-    </div>
+    <>
+      <a href="#main-content" className="skip-link">
+        Vai al contenuto principale
+      </a>
+
+      <Outlet />
+
+      {import.meta.env.DEV && (
+        <TanStackRouterDevtools position="bottom-right" />
+      )}
+    </>
   );
 }

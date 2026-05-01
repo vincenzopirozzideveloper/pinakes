@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { RootLayout } from './RootLayout';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -9,10 +8,12 @@ interface PublicLayoutProps {
 
 export function PublicLayout({ children }: PublicLayoutProps) {
   return (
-    <RootLayout>
-      <Header variant="public" />
-      <main className="flex-1">{children}</main>
+    <div className="min-h-screen flex flex-col bg-[var(--color-canvas)]">
+      <Header />
+      <main id="main-content" className="flex-1 min-h-screen">
+        {children}
+      </main>
       <Footer />
-    </RootLayout>
+    </div>
   );
 }
