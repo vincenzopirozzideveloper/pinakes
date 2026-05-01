@@ -21,6 +21,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
+    allowedHosts: ['pinakes.dev-vp.sagres.dom', 'localhost', '.dev-vp.sagres.dom'],
     hmr: { clientPort: 443, protocol: 'wss' },
     proxy: {
       '/api': { target: 'http://pinakes_nginx_dev', changeOrigin: true },
