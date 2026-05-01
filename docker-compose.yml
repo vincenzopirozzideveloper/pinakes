@@ -1,0 +1,110 @@
+services:
+
+  # ─── FRONTEND ────────────────────────────────────────────────────────────────
+  # Node 20 Alpine: Vite dev server con HMR abilitato su porta 5173
+  pinakes_frontend_dev:
+    image: node:20-alpine
+    container_name: pinakes_frontend_dev
+    working_dir: /var/www/app
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - /root/dev/pinakes/frontend:/var/www/app
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.10
+    restart: unless-stopped
+
+  # ─── NGINX ───────────────────────────────────────────────────────────────────
+  # Reverse proxy Laravel: gestisce le request HTTP e fa fastcgi_pass verso php:9000
+  pinakes_nginx_dev:
+    image: sagregs.sagresgestioni.it/nginx-laravel:1.0
+    container_name: pinakes_nginx_dev
+    working_dir: /var/www/app
+    volumes:
+      - /root/dev/pinakes/backend:/var/www/app
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.15
+    depends_on:
+      - pinakes_php_dev
+    restart: unless-stopped
+
+  # ─── PHP-FPM ─────────────────────────────────────────────────────────────────
+  # PHP 8.4 FPM: esegue il codice Laravel, ascolta su porta 9000 (fastcgi)
+  pinakes_php_dev:
+    image: sagregs.sagresgestioni.it/php84-fpm:1.0
+    container_name: pinakes_php_dev
+    working_dir: /var/www/app
+    volumes:
+      - /root/dev/pinakes/backend:/var/www/app
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.20
+    depends_on:
+      - pinakes_mariadb_dev
+      - pinakes_redis_dev
+    restart: unless-stopped
+
+  # ─── HORIZON ─────────────────────────────────────────────────────────────────
+  # Laravel Horizon: gestisce le code Redis, stesso codice del backend
+  pinakes_horizon_dev:
+    image: sagregs.sagresgestioni.it/php84-fpm:1.0
+    container_name: pinakes_horizon_dev
+    working_dir: /var/www/app
+    command: php artisan horizon
+    user: "www-data:www-data"
+    volumes:
+      - /root/dev/pinakes/backend:/var/www/app
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.25
+    depends_on:
+      - pinakes_redis_dev
+      - pinakes_mariadb_dev
+    restart: unless-stopped
+
+  # ─── REDIS ───────────────────────────────────────────────────────────────────
+  # Redis 7 Alpine: cache, sessioni e code Horizon con persistenza AOF
+  pinakes_redis_dev:
+    image: redis:7-alpine
+    container_name: pinakes_redis_dev
+    command: redis-server --appendonly yes
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.40
+    restart: unless-stopped
+
+  # ─── MARIADB ─────────────────────────────────────────────────────────────────
+  # MariaDB 11.8.3: database principale del progetto
+  pinakes_mariadb_dev:
+    image: mariadb:11.8.3
+    container_name: pinakes_mariadb_dev
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PASSWORD:-password}
+      MYSQL_DATABASE: pinakes
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.50
+    restart: unless-stopped
+
+  # ─── MEILISEARCH ─────────────────────────────────────────────────────────────
+  # Meilisearch v1.10: motore di ricerca full-text (opzionale, profile: search)
+  pinakes_meilisearch_dev:
+    image: getmeili/meilisearch:v1.10
+    container_name: pinakes_meilisearch_dev
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_KEY:-pinakes-dev-meili}
+      MEILI_ENV: development
+    networks:
+      pinakes_network:
+        ipv4_address: 172.74.0.60
+    profiles:
+      - search
+    restart: unless-stopped
+
+networks:
+  pinakes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.74.0.0/24
