@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <!--
+    Pinakes logo
+    - Outer circle border, stroke currentColor
+    - Greek key (meander) hairline pattern along the circle border, opacity 0.4
+    - Pi (Π) glyph centered, stroke 2
+    All paths use currentColor so the icon inherits color from CSS.
+  -->
+
+  <!-- Outer circle -->
+  <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="1.5" fill="none"/>
+
+  <!--
+    Greek key meander ring.
+    Constructed as a series of short L-shaped segments arranged in 4 groups
+    of 3 teeth spaced evenly around the inner edge of the circle (r≈27).
+    Each tooth: outer step out + horizontal + step in, repeating clockwise.
+    Simplified to a single rectangular meander band approximated with a
+    polyline path that traces one continuous Greek key circuit at radius ~27.
+    The band sits between r=24 and r=28.
+  -->
+
+  <!-- Top meander group (12 o'clock region, 4 teeth) -->
+  <path d="
+    M 26,6  L 26,4  L 38,4  L 38,6
+    M 26,8  L 26,4
+    M 38,8  L 38,4
+  " stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+
+  <!-- Right meander group (3 o'clock region) -->
+  <path d="
+    M 58,26  L 60,26  L 60,38  L 58,38
+    M 56,26  L 60,26
+    M 56,38  L 60,38
+  " stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+
+  <!-- Bottom meander group (6 o'clock region) -->
+  <path d="
+    M 26,58  L 26,60  L 38,60  L 38,58
+    M 26,56  L 26,60
+    M 38,56  L 38,60
+  " stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+
+  <!-- Left meander group (9 o'clock region) -->
+  <path d="
+    M 6,26  L 4,26  L 4,38  L 6,38
+    M 8,26  L 4,26
+    M 8,38  L 4,38
+  " stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+
+  <!--
+    Continuous Greek key band approximated with square-step motifs
+    at diagonal positions (NE, SE, SW, NW corners of the ring).
+  -->
+  <!-- NE corner meander -->
+  <path d="M 44,8  L 48,8  L 48,12  M 44,12 L 48,12" stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+  <!-- SE corner meander -->
+  <path d="M 52,44 L 56,44  L 56,48  M 52,48 L 56,48" stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+  <!-- SW corner meander -->
+  <path d="M 8,44  L 12,44  L 12,48  M 8,48  L 12,48" stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+  <!-- NW corner meander -->
+  <path d="M 8,12  L 12,12  L 12,16  M 8,16  L 12,16" stroke="currentColor" stroke-width="1" stroke-linecap="square" fill="none" opacity="0.4"/>
+
+  <!--
+    Pi (Π) glyph — center of 32,32
+    Two vertical bars: x=22..22 y=23..44  and  x=42..42 y=23..44
+    Horizontal crossbar: x=20..44 y=23
+    Stroke-width 2.5, round caps for crispness at small sizes.
+  -->
+  <path
+    d="M 20,23 L 44,23 M 23,23 L 23,44 M 41,23 L 41,44"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

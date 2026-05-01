@@ -40,6 +40,8 @@ services:
     networks:
       pinakes_network:
         ipv4_address: 172.74.0.20
+        aliases:
+          - php
     depends_on:
       - pinakes_mariadb_dev
       - pinakes_redis_dev
