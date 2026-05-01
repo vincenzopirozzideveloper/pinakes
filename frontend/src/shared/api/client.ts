@@ -15,10 +15,14 @@ api.interceptors.response.use(
   (err: unknown) => {
     if (axios.isAxiosError(err)) {
       const status = err.response?.status;
-      if (status === 401) {
+      const url = err.config?.url ?? '';
+      const onAuthPage = window.location.pathname.startsWith('/login');
+      const isMeProbe = url.endsWith('/me');
+
+      if (status === 401 && !onAuthPage && !isMeProbe) {
         window.location.href = '/login';
       }
-      if (status === 419) {
+      if (status === 419 && !onAuthPage) {
         window.location.reload();
       }
     }
