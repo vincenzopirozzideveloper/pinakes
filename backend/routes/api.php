@@ -12,12 +12,12 @@ Route::get('/up', fn () => ['ok' => true]);
 
 Route::prefix('v1')->group(function (): void {
 
-    Route::post('/login', [LoginController::class, 'store']);
+    Route::post('/login', LoginController::class);
 
     Route::middleware('auth:sanctum')->group(function (): void {
 
-        Route::post('/logout', [LogoutController::class, 'destroy']);
-        Route::get('/me', [MeController::class, 'show']);
+        Route::post('/logout', LogoutController::class);
+        Route::get('/me', MeController::class);
 
         Route::middleware('workspace')
             ->prefix('w/{workspace}')
